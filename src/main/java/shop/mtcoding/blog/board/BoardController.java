@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -65,25 +64,32 @@ public class BoardController {
     @GetMapping("/page/{page}")
     public String paging(@PathVariable int page, HttpServletRequest request) {
         boolean lastPage = paging.lastPage(page);
+        System.out.println(lastPage);
         if (page == 1) {
             return "redirect:/";
         }
-
         List<Board> boardList = paging.showPages(page);
+        System.out.println(1111);
         request.setAttribute("lastPage", lastPage);
         request.setAttribute("boardList", boardList);
+        request.setAttribute("page", page);
         return "index";
     }
 
     @GetMapping("/page/{page}/prevPage")
-    public String prevPage (@PathVariable int page){
+    public String prevPage(@PathVariable int page) {
+        System.out.println(1);
         int prevPage = paging.prevPage(page);
+        System.out.println(2);
+        System.out.println(prevPage);
         return "redirect:/page/" + prevPage;
     }
 
-    @GetMapping("/page/{page}/nextPage")
-    public String nextPage (@PathVariable int page){
-        int nextPage = paging.nextPage(page);
-        return "redirect:/page/" + nextPage;
+    @GetMapping("/page/{nextPage}/nextPage")
+    public String nextPage(@PathVariable int nextPage) {
+        System.out.println(1);
+        nextPage = paging.nextPage(nextPage);
+        System.out.println(2);
+        return "page/" + nextPage;
     }
 }
