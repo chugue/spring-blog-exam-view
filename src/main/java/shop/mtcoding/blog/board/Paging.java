@@ -16,8 +16,9 @@ public class Paging {
     private final BoardRepository boardRepository;
     int currentPage = 1;
     int showPages = 5;
-    int prevPage = currentPage - 1;
-    int nextPage = currentPage + 1;
+    int prevPage ;
+    int nextPage ;
+
 
     public boolean firstPage(int page, HttpServletRequest request) {
         boolean firstPage;
@@ -29,13 +30,13 @@ public class Paging {
 
     public boolean lastPage(int page) {
         boolean lastPage;
-        currentPage = page;
+        currentPage = page - 1;
         int totalPosts = boardRepository.findAll().size();
-        lastPage = (totalPosts - (showPages * currentPage)) < showPages;
+        lastPage = (totalPosts - (showPages*currentPage)) < showPages;
         return lastPage;
     }
 
-    public List<Board> showPages(int page, HttpServletRequest request) {
+    public List<Board> showPages(int page) {
         currentPage = page;
         List<Board> pageList = boardRepository.findAll();
         int totalPosts = pageList.size();
@@ -44,11 +45,23 @@ public class Paging {
         ArrayList<Board> boardList = new ArrayList<>();
 
         for (int j = start; j < end; j++) {
-            if (j > totalPosts){
+            if (j >= totalPosts){
                 break;
             }
             boardList.add(pageList.get(j));
         }
         return boardList;
+    }
+
+    public int nextPage(int page){
+        currentPage = page;
+        nextPage = currentPage + 1;
+        return nextPage;
+    }
+
+    public int prevPage(int page){
+        currentPage = page;
+        prevPage = currentPage -1;
+        return prevPage;
     }
 }

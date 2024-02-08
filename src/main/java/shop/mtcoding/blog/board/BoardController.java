@@ -18,9 +18,8 @@ public class BoardController {
 
     @GetMapping("/")
     public String index(HttpServletRequest request) {
-        List<Board> boardList= paging.showPages(1, request);
+        List<Board> boardList = paging.showPages(1);
         paging.firstPage(1, request);
-
         request.setAttribute("boardList", boardList);
         return "index";
     }
@@ -60,16 +59,31 @@ public class BoardController {
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id) {
         boardRepository.delete(id);
-        return "redirect:/1";
+        return "redirect:/";
     }
 
     @GetMapping("/page/{page}")
-    public String paging(@PathVariable int page) {
+    public String paging(@PathVariable int page, HttpServletRequest request) {
+        boolean lastPage = paging.lastPage(page);
         if (page == 1) {
             return "redirect:/";
         }
-        int totalPosts = boardRepository.findAll().size();
 
-        return "redirect:/";
+        List<Board> boardList = paging.showPages(page);
+        request.setAttribute("lastPage", lastPage);
+        request.setAttribute("boardList", boardList);
+        return "index";
+    }
+
+    @GetMapping("/page/{page}/prevPage")
+    public String prevPage (@PathVariable int page){
+        int prevPage = paging.prevPage(page);
+        return "redirect:/page/" + prevPage;
+    }
+
+    @GetMapping("/page/{page}/nextPage")
+    public String nextPage (@PathVariable int page){
+        int nextPage = paging.nextPage(page);
+        return "redirect:/page/" + nextPage;
     }
 }
