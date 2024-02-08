@@ -17,9 +17,14 @@ public class BoardController {
 
     @GetMapping("/")
     public String index(HttpServletRequest request) {
-        List<Board> boardList = paging.showPages(1);
-        paging.firstPage(1, request);
+        int currentPage = 1;
+        System.out.println("index 1");
+        List<Board> boardList = paging.showPages(currentPage);
+        System.out.println("index 2");
+        paging.firstPage(currentPage, request);
+        System.out.println("index 3");
         request.setAttribute("boardList", boardList);
+        System.out.println("index 4");
         return "index";
     }
 
@@ -62,34 +67,35 @@ public class BoardController {
     }
 
     @GetMapping("/page/{page}")
-    public String paging(@PathVariable int page, HttpServletRequest request) {
+    public String paging(@PathVariable("page") int page, HttpServletRequest request) {
+        System.out.println(1111);
         boolean lastPage = paging.lastPage(page);
         System.out.println(lastPage);
         if (page == 1) {
+            System.out.println("page :" + page);
             return "redirect:/";
         }
         List<Board> boardList = paging.showPages(page);
-        System.out.println(1111);
         request.setAttribute("lastPage", lastPage);
         request.setAttribute("boardList", boardList);
-        request.setAttribute("page", page);
-        return "index";
+        return "page/" + page;
     }
 
-    @GetMapping("/page/{page}/prevPage")
-    public String prevPage(@PathVariable int page) {
-        System.out.println(1);
-        int prevPage = paging.prevPage(page);
-        System.out.println(2);
-        System.out.println(prevPage);
-        return "redirect:/page/" + prevPage;
+    @GetMapping("/page/{currentPage}/prevPage")
+    public String prevPage(@PathVariable("currentPage") int currentPage) {
+        int prevPage = paging.prevPage(currentPage);
+        return "page/" + prevPage;
     }
 
-    @GetMapping("/page/{nextPage}/nextPage")
-    public String nextPage(@PathVariable int nextPage) {
-        System.out.println(1);
-        nextPage = paging.nextPage(nextPage);
-        System.out.println(2);
+    @GetMapping("/page/{currentPage}/nextPage")
+    public String nextPage(@PathVariable("currentPage") int currentPage, HttpServletRequest request) {
+        boolean lastpage = paging.lastPage(currentPage);
+        if(lastpage){
+            request.setAttribute("msg", "잘못된 요청입니다.");
+            request.setAttribute("status", 400);
+            return "error/40x";
+        }
+        int nextPage = paging.nextPage(currentPage);
         return "page/" + nextPage;
     }
 }
