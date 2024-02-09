@@ -67,7 +67,7 @@ public class BoardController {
     }
 
     @GetMapping("/page/{page}")
-    public String paging(@PathVariable("page") int page, HttpServletRequest request) {
+    public String paging(@PathVariable int page, HttpServletRequest request) {
         System.out.println(1111);
         boolean lastPage = paging.lastPage(page);
         System.out.println(lastPage);
