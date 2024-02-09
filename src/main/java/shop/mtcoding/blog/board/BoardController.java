@@ -82,13 +82,13 @@ public class BoardController {
     }
 
     @GetMapping("/page/{currentPage}/prevPage")
-    public String prevPage(@PathVariable("currentPage") int currentPage) {
+    public String prevPage(@PathVariable int currentPage) {
         int prevPage = paging.prevPage(currentPage);
         return "page/" + prevPage;
     }
 
     @GetMapping("/page/{currentPage}/nextPage")
-    public String nextPage(@PathVariable("currentPage") int currentPage, HttpServletRequest request) {
+    public String nextPage(@PathVariable int currentPage, HttpServletRequest request) {
         boolean lastpage = paging.lastPage(currentPage);
         if(lastpage){
             request.setAttribute("msg", "잘못된 요청입니다.");
