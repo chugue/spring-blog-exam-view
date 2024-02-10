@@ -1,10 +1,11 @@
-package shop.mtcoding.blog.board;
+package shop.mtcoding.blog.page;
 
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import shop.mtcoding.blog.board.Board;
+import shop.mtcoding.blog.board.BoardRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +16,16 @@ import java.util.List;
 public class Paging {
     private final BoardRepository boardRepository;
     final int  SHOW_PAGES = 5;
-    int currentPage = 1;
+    int currentPage ;
     int prevPage ;
     int nextPage ;
 
 
-    public boolean firstPage(int page, HttpServletRequest request) {
+    public boolean firstPage(int page) {
         boolean firstPage;
         currentPage = page;
         prevPage = currentPage - 1;
         firstPage = prevPage == 0;
-        request.setAttribute("firstPage", firstPage);
         return firstPage;
     }
 
@@ -49,18 +49,20 @@ public class Paging {
             if (j >= totalPosts){
                 break;
             }
+            System.out.println(pageList.get(j));
             boardList.add(pageList.get(j));
         }
         return boardList;
     }
 
-    public int nextPage(int currentPage){
-        nextPage = currentPage + 1;
-        return nextPage;
+    public int totalPages() {
+        List<Board> pageList = boardRepository.findAll();
+        int totalPosts = pageList.size();
+        int calculation = totalPosts%SHOW_PAGES;
+        int totalPages = (calculation < SHOW_PAGES)? calculation + 1 : totalPosts/SHOW_PAGES ;
+
+        return totalPages;
     }
 
-    public int prevPage(int currentPage){
-        prevPage = currentPage -1;
-        return prevPage;
-    }
+
 }
