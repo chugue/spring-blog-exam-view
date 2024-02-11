@@ -15,10 +15,10 @@ import java.util.List;
 @Component
 public class Paging {
     private final BoardRepository boardRepository;
-    final int  SHOW_PAGES = 5;
-    int currentPage ;
-    int prevPage ;
-    int nextPage ;
+    final int SHOW_PAGES = 5;
+    int currentPage;
+    int prevPage;
+    int nextPage;
 
 
     public boolean firstPage(int page) {
@@ -33,7 +33,7 @@ public class Paging {
         boolean lastPage;
         currentPage = page - 1;
         int totalPosts = boardRepository.findAll().size();
-        lastPage = (totalPosts - (SHOW_PAGES*currentPage)) < SHOW_PAGES;
+        lastPage = (totalPosts - (SHOW_PAGES * currentPage)) < SHOW_PAGES;
         return lastPage;
     }
 
@@ -42,11 +42,11 @@ public class Paging {
         List<Board> pageList = boardRepository.findAll();
         ArrayList<Board> boardList = new ArrayList<>();
         int totalPosts = pageList.size();
-        int start = (SHOW_PAGES*currentPage) - SHOW_PAGES;
-        int end = SHOW_PAGES*currentPage;
+        int start = (SHOW_PAGES * currentPage) - SHOW_PAGES;
+        int end = SHOW_PAGES * currentPage;
 
         for (int j = start; j < end; j++) {
-            if (j >= totalPosts){
+            if (j >= totalPosts) {
                 break;
             }
             System.out.println(pageList.get(j));
@@ -58,8 +58,9 @@ public class Paging {
     public int totalPages() {
         List<Board> pageList = boardRepository.findAll();
         int totalPosts = pageList.size();
-        int calculation = totalPosts%SHOW_PAGES;
-        int totalPages = (calculation < SHOW_PAGES)? calculation + 1 : totalPosts/SHOW_PAGES ;
+        int remainder = totalPosts % SHOW_PAGES;
+        int division = totalPosts / SHOW_PAGES;
+        int totalPages = (remainder <= SHOW_PAGES) ? division + 1 : division;
 
         return totalPages;
     }

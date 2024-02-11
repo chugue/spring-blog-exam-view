@@ -18,30 +18,52 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final Paging paging;
 
-//    @GetMapping("/")
-//    public String index(HttpServletRequest request) {
-//        int currentPage = 1;
-//        List<Board> boardList = paging.showPages(currentPage);
-//        paging.firstPage(currentPage, request);
-//        request.setAttribute("boardList", boardList);
-//        request.setAttribute("currentPage", currentPage);
-//        return "index";
-//    }
-
     @GetMapping("/{page}")
     public String paging(@PathVariable int page, HttpServletRequest request) {
         int currentPage = page;
-        boolean lastPage = paging.lastPage(page);
-        boolean firstPage = paging.firstPage(page);
+
+        boolean lastPage = paging.lastPage(currentPage);
+        boolean firstPage = paging.firstPage(currentPage);
         int totalPages = paging.totalPages();
+
         List<Page> pages = new ArrayList<>();
-        for (int i = 1 ; i < totalPages; i++) {
+
+        for (int i = 1; i <= totalPages; i++) {
             Page page1 = new Page();
             page1.setNumber(i);
             page1.setActive(currentPage == i);
             pages.add(page1);
         }
-        List<Board> boardList = paging.showPages(page);
+        List<Board> boardList = paging.showPages(currentPage);
+
+        request.setAttribute("pages", pages);
+        request.setAttribute("firstPage", firstPage);
+        request.setAttribute("lastPage", lastPage);
+        request.setAttribute("boardList", boardList);
+        request.setAttribute("prevPage", Math.max(1, currentPage - 1));
+        request.setAttribute("nextPage", Math.min(totalPages, currentPage + 1));
+
+        return "index";
+    }
+
+    @GetMapping( "/")
+    public String index( HttpServletRequest request) {
+        int currentPage = 1;
+
+        boolean lastPage = paging.lastPage(currentPage);
+        boolean firstPage = paging.firstPage(currentPage);
+        int totalPages = paging.totalPages();
+
+        List<Page> pages = new ArrayList<>();
+
+        for (int i = 1; i <= totalPages; i++) {
+            Page page1 = new Page();
+            page1.setNumber(i);
+            page1.setActive(currentPage == i);
+            pages.add(page1);
+        }
+        List<Board> boardList = paging.showPages(currentPage);
+
         request.setAttribute("pages", pages);
         request.setAttribute("firstPage", firstPage);
         request.setAttribute("lastPage", lastPage);
@@ -81,7 +103,7 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         boardRepository.update(id, requestDTO);
-        return "redirect:/";
+        return "redirect:/" + id;
     }
 
     @PostMapping("/board/{id}/delete")
@@ -89,24 +111,4 @@ public class BoardController {
         boardRepository.delete(id);
         return "redirect:/";
     }
-
-
-
-//    @GetMapping("/page/{currentPage}/prevPage")
-//    public String prevPage(@PathVariable int currentPage) {
-//        int prevPage = paging.prevPage(currentPage);
-//        return "redirect:/page/" + prevPage;
-//    }
-
-//    @GetMapping("/page/{currentPage}/nextPage")
-//    public String nextPage(@PathVariable int currentPage, HttpServletRequest request) {
-//        boolean lastpage = paging.lastPage(currentPage);
-//        if(lastpage){
-//            request.setAttribute("msg", "잘못된 요청입니다.");
-//            request.setAttribute("status", 400);
-//            return "error/40x";
-//        }
-//        int nextPage = paging.nextPage(currentPage);
-//        return "redirect:/page/" + nextPage;
-//    }
 }
