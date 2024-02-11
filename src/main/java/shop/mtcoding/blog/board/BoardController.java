@@ -21,10 +21,10 @@ public class BoardController {
     @GetMapping("/{page}")
     public String paging(@PathVariable int page, HttpServletRequest request) {
         int currentPage = page;
-
         boolean lastPage = paging.lastPage(currentPage);
         boolean firstPage = paging.firstPage(currentPage);
         int totalPages = paging.totalPages();
+
 
         List<Page> pages = new ArrayList<>();
 
@@ -108,7 +108,8 @@ public class BoardController {
 
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id) {
+        int currentPage = paging.currentPage(id);
         boardRepository.delete(id);
-        return "redirect:/";
+        return "redirect:/" + currentPage ;
     }
 }

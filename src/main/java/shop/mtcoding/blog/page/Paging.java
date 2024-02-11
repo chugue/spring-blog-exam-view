@@ -66,4 +66,10 @@ public class Paging {
     }
 
 
+    public int currentPage(int postId) {
+        List<Board> pageList = boardRepository.findAll();
+        int totalPosts = pageList.size();
+        int currentPage =((totalPosts - postId)/SHOW_PAGES) + 1;
+        return currentPage;
+    }
 }
