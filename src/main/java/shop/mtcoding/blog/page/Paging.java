@@ -49,7 +49,6 @@ public class Paging {
             if (j >= totalPosts) {
                 break;
             }
-            System.out.println(pageList.get(j));
             boardList.add(pageList.get(j));
         }
         return boardList;

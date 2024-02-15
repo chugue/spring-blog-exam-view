@@ -25,7 +25,6 @@ public class BoardController {
         boolean firstPage = paging.firstPage(currentPage);
         int totalPages = paging.totalPages();
 
-
         List<Page> pages = new ArrayList<>();
 
         for (int i = 1; i <= totalPages; i++) {
