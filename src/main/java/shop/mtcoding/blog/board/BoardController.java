@@ -16,6 +16,7 @@ import java.util.List;
 @Controller
 public class BoardController {
     private final BoardRepository boardRepository;
+
     private final Paging paging;
 
     @GetMapping("/{page}")
